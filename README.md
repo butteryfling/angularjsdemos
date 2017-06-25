@@ -14,4 +14,7 @@ node服务器返回json数据
 
 效果图
 
+![娱乐](https://github.com/butteryfling/angularjsdemos/blob/master/yule.png)
+
+![体育](https://github.com/butteryfling/angularjsdemos/blob/master/tiyu.png)
 
