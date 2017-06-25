@@ -1,0 +1,10 @@
+<ul>
+	<li ng-repeat="value in news">
+		<div class="three">
+			<h1 style="float: none;width: 100%;"><a href="{{value.url}}">{{value.title}}</a></h1>
+			<img ng-repeat = "key in value.src" ng-src="{{key}}">
+			<p><span>{{value.date}}</span></p>
+		</div>
+		
+	</li>
+</ul>

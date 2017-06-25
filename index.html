@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title>angular路由、angularhttp服务综合实例</title>
+	<script type="text/javascript" src="angular.min.js"></script>
+	<script type="text/javascript" src="angular-route.js"></script>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		div#container {
+			width: 510px;
+			margin: 0 auto;
+			border: 1px solid #E8E6E6;
+		}
+
+		a.top-nav {
+			display: inline-block;
+			width: 80px;
+			text-align: center;
+			font-size: 20px;
+			font-weight: 500;
+		}
+
+		a.top-nav:hover {
+			background-color: red;
+		}
+
+		ul{
+			width: 100%;
+			list-style: none;
+			/*border: 1px solid black;*/
+		}
+
+		div.nav {
+			padding: 10px 0;
+			border-bottom: 1px solid #E8E6E6;
+		}
+
+		li{
+			width: 100%;
+			padding: 5px 0;
+			border-bottom: 1px dashed #959090;
+		}
+
+		li:last-child {
+			border: none;
+		}
+
+		img{
+			width: 200px;
+			vertical-align: middle;
+		}
+
+		.three img{
+			width: 30%;
+		}
+		
+		.three h1,.two h1{
+			line-height: 40px;
+		}
+
+		li h1{
+			float: right;
+			width: 300px;
+			padding-left: 20px;
+			font-size: 18px;
+		}
+		h1 a{
+			color: #767575;
+			text-decoration: none;
+			text-wrap: normal;
+		}
+	</style>
+</head>
+<body ng-app="app">
+	<div id="container">
+		<div class="nav"><a href="#/yule/data1" class="top-nav">娱乐</a>
+		<a href="#/yule/data2" class="top-nav">体育</a></div>
+		
+		<ng-view></ng-view>
+	</div>
+</body>
+
+	<script type="text/javascript">
+		var app = angular.module("app",["ngRoute"]);
+
+		app.config(function($routeProvider){
+			$routeProvider.when("/yule/:num",{
+				'templateUrl':"news.html",
+				'controller':"yuleVC"
+			})
+			.otherwise({
+				redirectTo:"/yule/data1"
+			});
+			
+		})
+
+		function handleDataTi(data){
+			var newsArr = [];
+			var arr = data;
+			for(var i=0;i<arr.length;i++){
+				var newinfo = new Newinfo();
+				newinfo.title = arr[i].title;
+				newinfo.url = arr[i].url;
+				newinfo.src = [];
+				for(var j in arr[i]){
+					if (j.substring(0,4) == 'thum') {
+						newinfo.src.push(arr[i][j]);
+					}
+				}
+				newinfo.date = arr[i].date;
+				newsArr.push(newinfo);
+			}
+
+			return newsArr;
+		}
+
+		function Newinfo(title,url,src,src2,src3,date){
+			this.title = title;
+			this.url = url;
+			this.src = src;
+			this.date = date;
+		}
+
+		app.controller("yuleVC",function($scope,$http,$routeParams){
+			$http({
+			  method: 'GET',
+			  url: 'http://localhost:8000/'
+			}).then(function(response) {
+			    $scope.data = response;
+			    
+			    $scope.$watch('data',function(){
+			    	var datas = $scope.data.data.result[$routeParams.num];
+
+			    	console.log(datas);
+			    	
+			    	$scope.news = handleDataTi(datas);
+			    })
+			});
+		})
+
+
+	</script>
+</html>
